@@ -1,0 +1,38 @@
+<html>
+
+<head>
+    <title>Binance Web Socket Demo</title>
+</head>
+
+<body style="font-size: small; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    <h3>Binance Web Socket Demo</h3>
+    <div id='container'>
+
+    </div>
+    <script>
+        const socket = new WebSocket('wss://stream.binance.com:9443/ws/btcusdt@kline_15m');
+        socket.addEventListener('open', event => {
+            console.log('connected');
+        });
+        socket.addEventListener('message', data => {
+            var klineObject = JSON.parse(data.data);
+            var container = document.getElementById('container');
+            var properties = Object.keys(klineObject.k);
+            properties.map((item, index) => {
+                var newDiv = document.createElement('div');
+                newDiv.innerHTML = `<div style="width:100%"><p>${item}: ${klineObject.k[item]}</p></div>`;
+                var newFragment = document.createDocumentFragment();
+                newFragment.appendChild(newDiv);
+                container.appendChild(newFragment);
+            });
+            var seperatorDiv = document.createElement('div');
+            seperatorDiv.innerHTML = `<div style="width:100%; border-bottom:1px solid #ccc"/>`;
+            var newFragment = document.createDocumentFragment();
+            newFragment.appendChild(seperatorDiv);
+            container.appendChild(newFragment);
+        });
+
+    </script>
+</body>
+
+</html>
